@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NEW EDEN</title>
+<style>
+  html,body{margin:0;padding:0;width:100%;height:100%;background:#07070a;overflow:hidden;font-family:'Segoe UI',Arial,sans-serif;}
+  .stage{position:relative;width:100%;height:100%;min-height:640px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+
+  /* ---- backdrop: subtle gold grid + vignette ---- */
+  .grid{position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(212,175,55,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,175,55,0.07) 1px, transparent 1px);
+    background-size:42px 42px;
+    -webkit-mask-image:radial-gradient(ellipse at 50% 55%, #000 10%, transparent 72%);
+            mask-image:radial-gradient(ellipse at 50% 55%, #000 10%, transparent 72%);
+    animation:driftgrid 26s linear infinite;
+  }
+  @keyframes driftgrid{ from{background-position:0 0,0 0;} to{background-position:420px 0,0 420px;} }
+  .vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%, transparent 0%, #07070a 78%);pointer-events:none;}
+  .floorglow{position:absolute;left:50%;bottom:0;width:900px;height:260px;transform:translateX(-50%);
+    background:radial-gradient(ellipse at 50% 100%, rgba(255,140,20,0.18), transparent 70%);filter:blur(2px);pointer-events:none;}
+
+  /* ---- title ---- */
+  .title-wrap{position:relative;z-index:5;text-align:center;margin-bottom:8px;}
+  .brand{font-size:15px;letter-spacing:0.55em;color:#9fe8ff;opacity:0.75;text-transform:uppercase;margin-bottom:10px;}
+  h1{margin:0;font-size:clamp(42px,9vw,96px);letter-spacing:0.14em;font-weight:800;
+     color:#f3e6bd;
+     background:linear-gradient(180deg,#fff6d8 0%, #d4af37 45%, #8a6a10 100%);
+     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+     text-shadow:0 0 60px rgba(212,175,55,0.35);
+     filter:drop-shadow(0 2px 0 rgba(0,0,0,0.6));
+  }
+  .tagline{margin-top:10px;color:#7d8790;font-size:14px;letter-spacing:0.28em;text-transform:uppercase;}
+
+  /* ---- welding cell ---- */
+  .cell{position:relative;z-index:4;width:min(720px,86vw);height:230px;margin-top:18px;}
+  .beam{position:absolute;left:8%;right:8%;bottom:52px;height:20px;border-radius:2px;
+    background:linear-gradient(180deg,#c7cad0,#8b8e94 55%,#5c5f64);
+    box-shadow:0 6px 18px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+  .beam::before{content:'';position:absolute;inset:0;background-repeat:repeat-x;background-size:34px 100%;
+    background-image:repeating-linear-gradient(90deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 34px);}
+  .stand{position:absolute;bottom:0;width:10px;height:52px;background:#1b1b20;}
+  .stand.l{left:9%;} .stand.r{right:9%;}
+
+  .robot{position:absolute;top:0;left:50%;width:180px;height:190px;transform:translateX(-50%);}
+  .robot .col{position:absolute;top:0;left:50%;width:14px;height:46px;margin-left:-7px;background:linear-gradient(90deg,#1b1b20,#2c2c33,#1b1b20);border-radius:2px;}
+  .robot .shoulder{position:absolute;top:44px;left:50%;width:26px;height:26px;margin-left:-13px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #f0f1ec, #b9bcc2 60%, #83868c);box-shadow:0 0 0 3px #1b1b1d inset;}
+  .arm{position:absolute;top:56px;left:50%;width:14px;height:92px;margin-left:-7px;
+    background:linear-gradient(90deg,#c9cad0,#f0f1ec 45%,#c9cad0);border-radius:5px;
+    transform-origin:top center;
+    animation:sweep 3.2s ease-in-out infinite;
+  }
+  .arm::after{content:'';position:absolute;left:-2px;top:6px;bottom:6px;width:3px;background:#e8531c;border-radius:2px;opacity:0.85;}
+  .forearm{position:absolute;top:82px;left:50%;width:11px;height:64px;margin-left:-5.5px;
+    background:linear-gradient(90deg,#b9bcc2,#f0f1ec 45%,#b9bcc2);border-radius:5px;
+    transform-origin:top center;
+    animation:sweep2 3.2s ease-in-out infinite;
+  }
+  .torch{position:absolute;top:142px;left:50%;width:8px;height:26px;margin-left:-4px;background:#1b1b1d;border-radius:2px;
+    transform-origin:top center;animation:sweep2 3.2s ease-in-out infinite;}
+
+  @keyframes sweep{
+    0%{transform:translateX(-50%) rotate(-26deg);}
+    50%{transform:translateX(-50%) rotate(24deg);}
+    100%{transform:translateX(-50%) rotate(-26deg);}
+  }
+  @keyframes sweep2{
+    0%{transform:translateX(-50%) rotate(18deg);}
+    50%{transform:translateX(-50%) rotate(-30deg);}
+    100%{transform:translateX(-50%) rotate(18deg);}
+  }
+
+  /* weld point + spark burst, timed to the arm's sweep extremes */
+  .weldglow{position:absolute;bottom:52px;left:50%;width:26px;height:26px;margin-left:-13px;border-radius:50%;
+    background:radial-gradient(circle, rgba(255,214,140,0.95), rgba(255,140,20,0.5) 45%, transparent 72%);
+    opacity:0;filter:blur(1px);
+    animation:flash 3.2s ease-in-out infinite;
+  }
+  @keyframes flash{
+    0%,42%{opacity:0;transform:translateX(-330px) scale(0.6);}
+    48%{opacity:1;transform:translateX(-160px) scale(1.15);}
+    52%{opacity:0.2;transform:translateX(-160px) scale(0.9);}
+    92%,100%{opacity:0;transform:translateX(220px) scale(0.6);}
+    97%{opacity:1;transform:translateX(220px) scale(1.15);}
+  }
+  .sparks{position:absolute;bottom:60px;left:50%;width:2px;height:2px;}
+  .spark{position:absolute;width:3px;height:3px;background:#ffcf80;border-radius:50%;box-shadow:0 0 6px 1px #ffb347;opacity:0;}
+
+  /* ---- enter button ---- */
+  .enter-wrap{position:relative;z-index:6;margin-top:26px;}
+  .enter{
+    position:relative;padding:15px 46px;background:transparent;
+    border:1px solid rgba(212,175,55,0.65);color:#ffe8a8;
+    font-size:14px;letter-spacing:0.42em;text-transform:uppercase;text-decoration:none;
+    font-weight:600;display:inline-block;cursor:pointer;
+    box-shadow:0 0 0 rgba(212,175,55,0);
+    transition:box-shadow 0.35s ease, background 0.35s ease, color 0.35s ease, letter-spacing 0.35s ease;
+  }
+  .enter:hover{background:rgba(212,175,55,0.12);box-shadow:0 0 34px rgba(212,175,55,0.45);color:#fff6d8;letter-spacing:0.5em;}
+  .enter:active{box-shadow:0 0 12px rgba(212,175,55,0.6);}
+  .enter-sub{margin-top:12px;text-align:center;color:#4c545c;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;}
+
+  .lockicon{display:inline-block;width:10px;height:10px;border:1.4px solid #ffe8a8;border-radius:1px;margin-right:8px;position:relative;top:1px;}
+  .lockicon::before{content:'';position:absolute;left:1.5px;top:-5px;width:5px;height:5px;border:1.4px solid #ffe8a8;border-bottom:none;border-radius:4px 4px 0 0;}
+
+  .footer{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:#3a4046;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;z-index:5;}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="grid"></div>
+    <div class="floorglow"></div>
+
+    <div class="title-wrap">
+      <div class="brand">Autonomous Modular Home Manufacturing</div>
+      <h1>NEW EDEN</h1>
+      <div class="tagline">Steel &middot; Robotics &middot; Zero-Waste Production</div>
+    </div>
+
+    <div class="cell">
+      <div class="robot">
+        <div class="col"></div>
+        <div class="shoulder"></div>
+        <div class="arm"></div>
+        <div class="forearm"></div>
+        <div class="torch"></div>
+      </div>
+      <div class="stand l"></div>
+      <div class="stand r"></div>
+      <div class="beam"></div>
+      <div class="weldglow"></div>
+      <div class="sparks" id="sparks"></div>
+    </div>
+
+    <div class="enter-wrap">
+      <a class="enter" href="digital-twin" id="enterBtn"><span class="lockicon"></span>Enter The Factory</a>
+      <div class="enter-sub">Password required &middot; Digital Twin Access</div>
+    </div>
+
+    <div class="vignette"></div>
+    <div class="footer">New Eden &copy; <span id="yr"></span> &mdash; Cold-Formed Steel, Continuously Built</div>
+  </div>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // simple spark-burst generator, timed loosely to the CSS weld flash
+  var sparkHost = document.getElementById('sparks');
+  var sparkEls = [];
+  var SPARK_COUNT = 16;
+  for (var i = 0; i < SPARK_COUNT; i++) {
+    var s = document.createElement('div');
+    s.className = 'spark';
+    sparkHost.appendChild(s);
+    sparkEls.push(s);
+  }
+
+  function burst(xOffset) {
+    for (var i = 0; i < sparkEls.length; i++) {
+      (function(el, i){
+        var ang = Math.random() * Math.PI * 2;
+        var dist = 10 + Math.random() * 34;
+        var dx = Math.cos(ang) * dist;
+        var dy = -Math.abs(Math.sin(ang) * dist) - 4;
+        el.style.opacity = '1';
+        el.style.transition = 'none';
+        el.style.left = xOffset + 'px';
+        el.style.top = '0px';
+        // force reflow then animate out
+        void el.offsetWidth;
+        el.style.transition = 'transform 0.55s ease-out, opacity 0.6s ease-out';
+        el.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+        el.style.opacity = '0';
+      })(sparkEls[i], i);
+    }
+  }
+
+  // fire a burst at each end of the 3.2s sweep cycle (matches the CSS keyframe timing)
+  var CYCLE = 3200;
+  function loop() {
+    burst(-160);
+    setTimeout(function(){ burst(220); }, CYCLE * 0.45);
+  }
+  loop();
+  setInterval(loop, CYCLE);
+</script>
+</body>
+</html>
