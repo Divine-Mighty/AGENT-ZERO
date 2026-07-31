@@ -5476,6 +5476,253 @@ function buildWallsLine(scene, THREE) {
     cartGroup.add(cargoMesh);
 
     // ===================================================================
+    // 8b. Steps 4-13 of the New Eden Wall Line brief (window/door install
+    //    through transfer-out), extending the framing/fastening/sheathing
+    //    sequence above. Every mesh here is a panelGroup child, driven by
+    //    the same walls_setPhase()/BUILD_STEPS state machine as the
+    //    framing members: it appears, persists, and retracts on the same
+    //    per-cycle beat, in the correct real-world order.
+    // ===================================================================
+
+    // --- 4. Window + door install ---------------------------------------
+    // Simplification note: the exterior sheathing sheet above is a single
+    // flat plate with no physical cutout for the opening, so the window
+    // unit is seated proud of the sheet's face at the opening's position
+    // rather than flush-mounted through a cut sheet. This panel family
+    // frames only one rough opening (the window bay above); the door is
+    // shown staged and mounted at the panel's right-edge boundary, where
+    // a real wall-panel run would butt against a neighboring door panel.
+    // Both are real installed units driven by the same build beat, not
+    // decorative props.
+    var WINDOW_W = OPENING_SPAN - 0.06;
+    var WINDOW_H = (HEADER_Y - SILL_Y) - 0.06;
+    var WINDOW_T = 0.1;
+    var TP_WINDOW = { x: 0, y: (HEADER_Y + SILL_Y) / 2, z: TP_SHEET.z + SHEET_T / 2 + 0.06 };
+
+    var windowFrameMat = new THREE.MeshStandardMaterial({ color: 0xe9ebe6, metalness: 0.3, roughness: 0.4 });
+    var windowGlassMat = new THREE.MeshStandardMaterial({
+        color: 0x8fd8ff, metalness: 0.1, roughness: 0.1,
+        transparent: true, opacity: 0.45, emissive: 0x1a3a44, emissiveIntensity: 0.25
+    });
+    var windowGroup = new THREE.Group();
+    windowGroup.visible = false;
+    var windowFrame = new THREE.Mesh(new THREE.BoxGeometry(WINDOW_W, WINDOW_H, WINDOW_T), windowFrameMat);
+    windowGroup.add(windowFrame);
+    var windowGlass = new THREE.Mesh(new THREE.BoxGeometry(WINDOW_W - 0.12, WINDOW_H - 0.12, WINDOW_T * 0.4), windowGlassMat);
+    windowGlass.position.z = WINDOW_T * 0.15;
+    windowGroup.add(windowGlass);
+    panelGroup.add(windowGroup);
+
+    var DOOR_W = 0.9, DOOR_H = 2.1, DOOR_T = 0.1;
+    var TP_DOOR = { x: KING_X + 0.62, y: DOOR_H / 2, z: CHAN_D / 2 + 0.06 };
+    var doorSlabMat = new THREE.MeshStandardMaterial({ color: 0x5a3d24, metalness: 0.1, roughness: 0.6 });
+    var doorKnobMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.85, roughness: 0.25 });
+    var doorGroup = new THREE.Group();
+    doorGroup.visible = false;
+    var doorSlab = new THREE.Mesh(new THREE.BoxGeometry(DOOR_W, DOOR_H, DOOR_T), doorSlabMat);
+    doorGroup.add(doorSlab);
+    var doorKnob = new THREE.Mesh(new THREE.SphereGeometry(0.04, 10, 10), doorKnobMat);
+    doorKnob.position.set(DOOR_W / 2 - 0.1, 0, DOOR_T / 2 + 0.03);
+    doorGroup.add(doorKnob);
+    panelGroup.add(doorGroup);
+
+    // --- 5. Flashing around the window opening ---------------------------
+    var flashMat = new THREE.MeshStandardMaterial({ color: 0xc9ccd0, metalness: 0.8, roughness: 0.3 });
+    var FLASH_Z = TP_WINDOW.z + WINDOW_T / 2 + 0.03;
+    var flashTop = new THREE.Mesh(new THREE.BoxGeometry(WINDOW_W + 0.3, 0.08, 0.06), flashMat);
+    var TP_FLASH_TOP = { x: 0, y: HEADER_Y + 0.08, z: FLASH_Z };
+    var flashL = new THREE.Mesh(new THREE.BoxGeometry(0.08, WINDOW_H + 0.1, 0.06), flashMat);
+    var TP_FLASH_L = { x: -JACK_X - 0.05, y: (HEADER_Y + SILL_Y) / 2, z: FLASH_Z };
+    var flashR = new THREE.Mesh(new THREE.BoxGeometry(0.08, WINDOW_H + 0.1, 0.06), flashMat);
+    var TP_FLASH_R = { x: JACK_X + 0.05, y: (HEADER_Y + SILL_Y) / 2, z: FLASH_Z };
+    [flashTop, flashL, flashR].forEach(function (m) { m.visible = false; panelGroup.add(m); });
+
+    // --- 6. Electrical rough-in ------------------------------------------
+    var elecBoxMat = new THREE.MeshStandardMaterial({ color: 0x2255aa, metalness: 0.3, roughness: 0.5, emissive: 0x081a33, emissiveIntensity: 0.3 });
+    var conduitMat = new THREE.MeshStandardMaterial({ color: 0x8a8d93, metalness: 0.75, roughness: 0.3 });
+    var TP_ELEC_A = { x: -1.5, y: 0.9, z: 0 };
+    var TP_ELEC_B = { x: 1.2, y: 0.9, z: 0 };
+    var elecBoxA = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.12, 0.1), elecBoxMat);
+    var elecBoxB = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.12, 0.1), elecBoxMat);
+    [elecBoxA, elecBoxB].forEach(function (m) { m.visible = false; panelGroup.add(m); });
+    var CONDUIT_RUN_Y = 1.6;
+    var conduitRun = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.04, 0.04, TP_ELEC_B.x - TP_ELEC_A.x, 8),
+        conduitMat
+    );
+    conduitRun.rotation.z = Math.PI / 2;
+    var TP_CONDUIT_RUN = { x: (TP_ELEC_A.x + TP_ELEC_B.x) / 2, y: CONDUIT_RUN_Y, z: 0 };
+    conduitRun.visible = false;
+    panelGroup.add(conduitRun);
+    var conduitStubGeo = new THREE.CylinderGeometry(0.035, 0.035, CONDUIT_RUN_Y - TP_ELEC_A.y - 0.06, 8);
+    var conduitStubA = new THREE.Mesh(conduitStubGeo, conduitMat);
+    var TP_CONDUIT_STUB_A = { x: TP_ELEC_A.x, y: (TP_ELEC_A.y + 0.06 + CONDUIT_RUN_Y) / 2, z: 0 };
+    var conduitStubB = new THREE.Mesh(conduitStubGeo, conduitMat);
+    var TP_CONDUIT_STUB_B = { x: TP_ELEC_B.x, y: (TP_ELEC_B.y + 0.06 + CONDUIT_RUN_Y) / 2, z: 0 };
+    [conduitStubA, conduitStubB].forEach(function (m) { m.visible = false; panelGroup.add(m); });
+
+    // --- 7/8. Spray-foam insulation + cure --------------------------------
+    // Deliberate choice over fiberglass batts: full-depth cavity fill with
+    // no compression/gap losses, better R-value per inch, and a cure time
+    // short enough to keep the conveyor moving (see the CURE_DWELL beat).
+    var foamMat = new THREE.MeshStandardMaterial({ color: 0xf5e6b8, roughness: 0.85, metalness: 0.0, emissive: 0x3a2f10, emissiveIntensity: 0.0 });
+    var FOAM_MEMBER_XS = [-KING_X, -1.936, -1.452, -0.968, -JACK_X, JACK_X, 0.968, 1.452, 1.936, KING_X];
+    var FOAM_H = PANEL_H - CHAN_T * 2.6;
+    var FOAM_D = CHAN_D * 0.85;
+    var foamBays = [];
+    for (var fbi = 0; fbi < FOAM_MEMBER_XS.length - 1; fbi++) {
+        var xLo = FOAM_MEMBER_XS[fbi], xHi = FOAM_MEMBER_XS[fbi + 1];
+        if (xLo === -JACK_X && xHi === JACK_X) { continue; } // window opening, no cavity here
+        var bayW = (xHi - xLo) - CHAN_T * 1.4;
+        if (bayW <= 0.02) { continue; }
+        var foamMesh = new THREE.Mesh(new THREE.BoxGeometry(bayW, FOAM_H, FOAM_D), foamMat);
+        foamMesh.visible = false;
+        panelGroup.add(foamMesh);
+        foamBays.push({ mesh: foamMesh, target: { x: (xLo + xHi) / 2, y: PANEL_H / 2, z: 0 } });
+    }
+    var sprayNozzleMat = new THREE.MeshStandardMaterial({ color: 0xffb300, metalness: 0.6, roughness: 0.35 });
+    var sprayNozzle = new THREE.Group();
+    sprayNozzle.visible = false;
+    var nozzleBody = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.08, 0.3, 10), sprayNozzleMat);
+    nozzleBody.rotation.x = Math.PI / 2;
+    sprayNozzle.add(nozzleBody);
+    wallsGroup.add(sprayNozzle);
+
+    // --- 9. Interior GIB close-up (same suction-robot process as the
+    //     exterior sheathing beat, applied from the interior/open face) ---
+    var interiorGibMat = new THREE.MeshStandardMaterial({ color: 0xdcd6c8, roughness: 0.7, metalness: 0.0 });
+    var TP_SHEET_INT = { x: 0, y: PANEL_H / 2, z: -(CHAN_D / 2 + SHEET_T / 2 + 0.02) };
+    var interiorSheetMesh = new THREE.Mesh(sheetGeo, interiorGibMat);
+    interiorSheetMesh.visible = false;
+    panelGroup.add(interiorSheetMesh);
+    var VAC_PARK_INT  = { x: STATION_X - GANTRY_HALF_LEN + 1.0, y: GANTRY_Y - 0.2, z: STATION_Z - 1.0 };
+    var VAC_HOVER_INT = { x: STATION_X, y: PLATFORM_TOP_Y + PANEL_H / 2, z: STATION_Z - 1.0 };
+    var VAC_FINAL_INT = { x: STATION_X, y: PLATFORM_TOP_Y + PANEL_H / 2, z: STATION_Z + TP_SHEET_INT.z - VAC_CUP_GAP };
+
+    // --- 11. Silicone / sealant around the window perimeter --------------
+    var siliconeMat = new THREE.MeshStandardMaterial({ color: 0xf0ece0, roughness: 0.25, metalness: 0.05, emissive: 0x2a2820, emissiveIntensity: 0.15 });
+    var SIL_Z = FLASH_Z + 0.04;
+    var siliconeTop = new THREE.Mesh(new THREE.BoxGeometry(WINDOW_W + 0.06, 0.035, 0.035), siliconeMat);
+    var TP_SIL_TOP = { x: 0, y: HEADER_Y - 0.02, z: SIL_Z };
+    var siliconeBottom = new THREE.Mesh(new THREE.BoxGeometry(WINDOW_W + 0.06, 0.035, 0.035), siliconeMat);
+    var TP_SIL_BOTTOM = { x: 0, y: SILL_Y + 0.02, z: SIL_Z };
+    var siliconeLeft = new THREE.Mesh(new THREE.BoxGeometry(0.035, WINDOW_H + 0.06, 0.035), siliconeMat);
+    var TP_SIL_LEFT = { x: -JACK_X + 0.02, y: (HEADER_Y + SILL_Y) / 2, z: SIL_Z };
+    var siliconeRight = new THREE.Mesh(new THREE.BoxGeometry(0.035, WINDOW_H + 0.06, 0.035), siliconeMat);
+    var TP_SIL_RIGHT = { x: JACK_X - 0.02, y: (HEADER_Y + SILL_Y) / 2, z: SIL_Z };
+    [siliconeTop, siliconeBottom, siliconeLeft, siliconeRight].forEach(function (m) { m.visible = false; panelGroup.add(m); });
+
+    // --- 12. Quality control scan gate ------------------------------------
+    var qcScanMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.5, side: THREE.DoubleSide, depthWrite: false });
+    var qcScanPlane = new THREE.Mesh(new THREE.PlaneGeometry(PANEL_W - 0.1, 0.05), qcScanMat);
+    qcScanPlane.visible = false;
+    panelGroup.add(qcScanPlane);
+
+    // ===================================================================
+    // 8c. Material staging: pallet racks (windows/doors/roof-sheet stock)
+    //    fed to the line by an AI-driven mobile robot, plus staged
+    //    spray-foam supply tanks. This is line-side infrastructure, not
+    //    part of the per-panel build cycle, so it lives directly in
+    //    wallsGroup and runs on its own slower, independent loop.
+    // ===================================================================
+    var RACK_X = STATION_X - 5.6;
+    var RACK_Z = STATION_Z - 3.4;
+    var rackFrameMat = new THREE.MeshStandardMaterial({ color: COLOR_STEEL_DARK, metalness: 0.7, roughness: 0.4 });
+    var palletRackGroup = new THREE.Group();
+    palletRackGroup.position.set(RACK_X, 0, RACK_Z);
+    wallsGroup.add(palletRackGroup);
+
+    var rackUprightGeo = new THREE.BoxGeometry(0.12, 3.2, 0.12);
+    [[-1.4, -0.9], [1.4, -0.9], [-1.4, 0.9], [1.4, 0.9]].forEach(function (p) {
+        var upright = new THREE.Mesh(rackUprightGeo, rackFrameMat);
+        upright.position.set(p[0], 1.6, p[1]);
+        palletRackGroup.add(upright);
+    });
+    [0.6, 1.6, 2.6].forEach(function (shelfY) {
+        var shelf = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.06, 2.0), rackFrameMat);
+        shelf.position.set(0, shelfY, 0);
+        palletRackGroup.add(shelf);
+    });
+    // stock: window units on the bottom shelf, door units on the middle
+    // shelf, roll-formed roof-sheet stock on the top shelf
+    for (var wsi = 0; wsi < 3; wsi++) {
+        var stockWin = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.5, 0.08), windowFrameMat);
+        stockWin.rotation.y = Math.PI / 2;
+        stockWin.position.set(-0.9, 0.9, -0.5 + wsi * 0.5);
+        palletRackGroup.add(stockWin);
+    }
+    for (var dsi = 0; dsi < 2; dsi++) {
+        var stockDoor = new THREE.Mesh(new THREE.BoxGeometry(0.9, 2.0, 0.08), doorSlabMat);
+        stockDoor.rotation.y = Math.PI / 2;
+        stockDoor.position.set(-0.9, 1.9, -0.4 + dsi * 0.8);
+        palletRackGroup.add(stockDoor);
+    }
+    for (var rsi = 0; rsi < 4; rsi++) {
+        var stockRoof = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.04, 1.6), panelMat);
+        stockRoof.position.set(0.1, 2.9 + rsi * 0.05, 0);
+        palletRackGroup.add(stockRoof);
+    }
+    if (typeof createHologramLabel === 'function') {
+        createHologramLabel(scene, THREE, {
+            title: 'PALLET RACK - WALL LINE',
+            lines: ['WINDOW UNITS', 'DOOR UNITS', 'ROOF SHEET STOCK', 'FED BY AMR'],
+            x: RACK_X, y: 3.6, z: RACK_Z,
+            width: 2.4, height: 1.8, accent: '#00e5ff'
+        });
+    }
+
+    // AI-driven mobile robot (AMR): the real-world vendor category here is
+    // MiR (Mobile Industrial Robots) - no ABB AMR product exists, so this
+    // is modeled as a generic MiR-class unit rather than an invented ABB
+    // one (flagged the same way the reference docs flag unverified
+    // equipment, rather than guessed). Drives a slow, continuous loop
+    // between the pallet rack and the station, independent of the panel
+    // build cycle's own (faster) timing.
+    var amrBodyMat = new THREE.MeshStandardMaterial({ color: 0xe0e2e6, metalness: 0.3, roughness: 0.45 });
+    var amrTopMat = new THREE.MeshStandardMaterial({ color: 0x1b1b20, metalness: 0.5, roughness: 0.5, emissive: 0x00e5ff, emissiveIntensity: 0.25 });
+    var amrGroup = new THREE.Group();
+    wallsGroup.add(amrGroup);
+    var amrBody = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.28, 0.5), amrBodyMat);
+    amrBody.position.y = 0.2;
+    amrGroup.add(amrBody);
+    var amrTop = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.05, 0.36), amrTopMat);
+    amrTop.position.y = 0.36;
+    amrGroup.add(amrTop);
+    var amrCargo = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.5, 0.08), windowFrameMat);
+    amrCargo.position.y = 0.66;
+    amrCargo.visible = false;
+    amrGroup.add(amrCargo);
+    var AMR_STAGE = { x: RACK_X, z: RACK_Z + 1.6 };
+    var AMR_DROP  = { x: STATION_X - 1.2, z: STATION_Z + 0.6 };
+    var AMR_LOOP_PERIOD = 11.0; // independent of TOTAL_CYCLE, computed below
+
+    // Spray-foam supply: two-part (A-side/B-side) polyurethane tanks,
+    // staged near the panel's interior/open face rather than conjured out
+    // of nowhere for the INSULATION_SPRAY beat.
+    var tankMat = new THREE.MeshStandardMaterial({ color: 0xb8bcc2, metalness: 0.6, roughness: 0.35 });
+    var tankBandMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.7, roughness: 0.3 });
+    var foamTankGroup = new THREE.Group();
+    foamTankGroup.position.set(STATION_X - 4.2, 0, STATION_Z + 2.2);
+    wallsGroup.add(foamTankGroup);
+    [-0.5, 0.5].forEach(function (tx) {
+        var tank = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 1.8, 16), tankMat);
+        tank.position.set(tx, 0.9, 0);
+        foamTankGroup.add(tank);
+        var band = new THREE.Mesh(new THREE.TorusGeometry(0.35, 0.03, 8, 20), tankBandMat);
+        band.rotation.x = Math.PI / 2;
+        band.position.set(tx, 1.3, 0);
+        foamTankGroup.add(band);
+    });
+    if (typeof createHologramLabel === 'function') {
+        createHologramLabel(scene, THREE, {
+            title: 'SPRAY FOAM SUPPLY',
+            lines: ['2-PART POLYURETHANE', 'A-SIDE / B-SIDE', 'FEEDS INSULATION SPRAY STATION'],
+            x: foamTankGroup.position.x, y: 2.2, z: foamTankGroup.position.z,
+            width: 2.2, height: 1.5, accent: '#ffb300'
+        });
+    }
+
+    // ===================================================================
     // 9. Holographic station label. Core wiring (title/x/y/z/accent/
     //    stationIndex) is UNCHANGED; we now capture the returned record so
     //    step 12 can redraw its canvas texture with a live progress line.
@@ -5608,9 +5855,18 @@ function buildWallsLine(scene, THREE) {
     var ST_HEADER        = 12;
     var ST_SILL          = 13;
     var ST_BRACE         = 14;
-    var ST_SHEATHING     = 15; // NEW: vacuum-lifter applies the steel cladding sheet (Task A.2)
-    var ST_COMPLETE      = 16;
-    var ST_RESET         = 17;
+    var ST_SHEATHING     = 15; // step 3: vacuum-lifter applies the exterior steel cladding sheet
+    var ST_WINDOW_DOOR   = 16; // step 4: window + door units seated/mounted
+    var ST_FLASHING      = 17; // step 5: weatherproofing flashing around the opening
+    var ST_ELECTRICAL    = 18; // step 6: electrical rough-in through the open frame
+    var ST_INSULATION    = 19; // step 7: spray-foam insulation fills the cavity
+    var ST_CURE          = 20; // step 8: brief cure/off-gas dwell before closing up
+    var ST_INTERIOR_GIB  = 21; // step 9: interior GIB close-up, same suction-robot process
+    var ST_FINAL_FASTEN  = 22; // step 10: interior GIB fixed off with fasteners
+    var ST_SILICONE      = 23; // step 11: silicone/sealant at joints and window perimeter
+    var ST_QC            = 24; // step 12: quality control scan gate
+    var ST_COMPLETE      = 25;
+    var ST_RESET         = 26; // step 13: transfer-out via the self-propelled cart
 
     var BUILD_STEPS = [
         { name: 'BOTTOM_TRACK - sole plate lowers onto the table',        dur: 1.0, progress: 'BUILDING: BOTTOM TRACK' },
@@ -5629,8 +5885,17 @@ function buildWallsLine(scene, THREE) {
         { name: 'WINDOW_SILL_CRIPPLE - sill + center cripple below',      dur: 1.2, progress: 'FRAMING OPENING: SILL' },
         { name: 'DIAGONAL_BRACE - steel strap, corner bracing',           dur: 1.3, progress: 'INSTALLING DIAGONAL BRACE' },
         { name: 'SHEATHING - vacuum-lifter applies steel cladding sheet', dur: 1.5, progress: 'APPLYING STEEL SHEATHING' },
+        { name: 'WINDOW_DOOR_INSTALL - window + door units seated',       dur: 1.6, progress: 'INSTALLING WINDOW + DOOR' },
+        { name: 'FLASHING - weatherproof flashing around the opening',    dur: 1.3, progress: 'APPLYING FLASHING' },
+        { name: 'ELECTRICAL_ROUGH_IN - conduit + boxes through the frame',dur: 1.5, progress: 'ELECTRICAL ROUGH-IN' },
+        { name: 'INSULATION_SPRAY - spray-foam nozzle fills the cavity',  dur: 1.8, progress: 'SPRAYING FOAM FILL' },
+        { name: 'CURE_DWELL - brief cure / off-gas window before close-up', dur: 1.0, progress: 'CURING: OFF-GAS WINDOW' },
+        { name: 'INTERIOR_GIB - vacuum-lifter applies interior board',    dur: 1.5, progress: 'APPLYING INTERIOR GIB' },
+        { name: 'FINAL_FASTENING - interior GIB fixed off',               dur: 1.2, progress: 'FASTENING INTERIOR GIB' },
+        { name: 'SILICONE - sealant at joints + window perimeter',        dur: 1.3, progress: 'SILICONE SEALANT' },
+        { name: 'QUALITY_CONTROL - dimensional/fill/fastening/weather scan', dur: 1.4, progress: 'QC SCAN: PASS' },
         { name: 'PANEL_COMPLETE - glow pulse beat',                       dur: 1.6, progress: 'PANEL COMPLETE' },
-        { name: 'RESET - studs retract, table clears for next cycle',     dur: 1.2, progress: 'RESETTING TABLE' }
+        { name: 'RESET - transfer-out, table clears for next cycle',      dur: 1.2, progress: 'TRANSFERRING OUT' }
     ];
 
     var BUILD_STEP_START = [];
@@ -5744,7 +6009,25 @@ function buildWallsLine(scene, THREE) {
         walls_setPhase(sill, TP_SILL, ST_SILL, stepIdx, resetU);
         walls_setPhase(cripple, TP_CRIPPLE, ST_SILL, stepIdx, resetU); // cripple ships with the sill/step
         walls_setPhase(brace, TP_BRACE, ST_BRACE, stepIdx, resetU);
-        walls_setPhase(sheetMesh, TP_SHEET, ST_SHEATHING, stepIdx, resetU); // steel cladding sheet
+        walls_setPhase(sheetMesh, TP_SHEET, ST_SHEATHING, stepIdx, resetU); // exterior steel cladding sheet
+        walls_setPhase(windowGroup, TP_WINDOW, ST_WINDOW_DOOR, stepIdx, resetU);
+        walls_setPhase(doorGroup, TP_DOOR, ST_WINDOW_DOOR, stepIdx, resetU);
+        walls_setPhase(flashTop, TP_FLASH_TOP, ST_FLASHING, stepIdx, resetU);
+        walls_setPhase(flashL, TP_FLASH_L, ST_FLASHING, stepIdx, resetU);
+        walls_setPhase(flashR, TP_FLASH_R, ST_FLASHING, stepIdx, resetU);
+        walls_setPhase(elecBoxA, TP_ELEC_A, ST_ELECTRICAL, stepIdx, resetU);
+        walls_setPhase(elecBoxB, TP_ELEC_B, ST_ELECTRICAL, stepIdx, resetU);
+        walls_setPhase(conduitRun, TP_CONDUIT_RUN, ST_ELECTRICAL, stepIdx, resetU);
+        walls_setPhase(conduitStubA, TP_CONDUIT_STUB_A, ST_ELECTRICAL, stepIdx, resetU);
+        walls_setPhase(conduitStubB, TP_CONDUIT_STUB_B, ST_ELECTRICAL, stepIdx, resetU);
+        for (var fbj = 0; fbj < foamBays.length; fbj++) {
+            walls_setPhase(foamBays[fbj].mesh, foamBays[fbj].target, ST_INSULATION, stepIdx, resetU);
+        }
+        walls_setPhase(interiorSheetMesh, TP_SHEET_INT, ST_INTERIOR_GIB, stepIdx, resetU); // interior GIB board
+        walls_setPhase(siliconeTop, TP_SIL_TOP, ST_SILICONE, stepIdx, resetU);
+        walls_setPhase(siliconeBottom, TP_SIL_BOTTOM, ST_SILICONE, stepIdx, resetU);
+        walls_setPhase(siliconeLeft, TP_SIL_LEFT, ST_SILICONE, stepIdx, resetU);
+        walls_setPhase(siliconeRight, TP_SIL_RIGHT, ST_SILICONE, stepIdx, resetU);
 
         // ---- magazine blank depletion / refill (purely time-derived) --
         for (var mi = 0; mi < magazineBlanks.length; mi++) {
@@ -5760,9 +6043,11 @@ function buildWallsLine(scene, THREE) {
         var flash = 0;
         var gripClosed = false;
         var activeMesh = null;
-        vacuumEffector.visible = false;   // only shown during ST_SHEATHING below
+        vacuumEffector.visible = false;   // shown during ST_SHEATHING and ST_INTERIOR_GIB below
         cartGroup.visible = false;        // only shown during ST_RESET below
         cargoMesh.visible = false;
+        sprayNozzle.visible = false;      // only shown during ST_INSULATION below
+        qcScanPlane.visible = false;      // only shown during ST_QC below
 
         if (stepIdx === ST_BOTTOM_TRACK) {
             var dropT = walls_easeOutCubic(u / 0.6);
@@ -5903,6 +6188,125 @@ function buildWallsLine(scene, THREE) {
             vacuumEffector.visible = true;
             aim = REST_POINT;
             gripClosed = false;
+        } else if (stepIdx === ST_WINDOW_DOOR) {
+            // Window seats into its rough opening; door mounts at the
+            // panel's edge boundary. Both arrive already fabricated (fed
+            // by the AMR from the pallet rack), so this beat shows them
+            // seating/fastening rather than being carried from a magazine.
+            var winT = walls_easeOutCubic(walls_clamp(u / 0.55, 0, 1));
+            windowGroup.position.z = TP_WINDOW.z - (1 - winT) * 1.2;
+            var winFlash = walls_pulseAt(u, 0.6, 0.15);
+            var doorT = walls_easeOutCubic(walls_clamp((u - 0.35) / 0.55, 0, 1));
+            doorGroup.position.y = TP_DOOR.y + (1 - doorT) * 1.4;
+            var doorFlash = walls_pulseAt(u, 0.92, 0.12);
+            flash = Math.max(winFlash, doorFlash);
+            gripClosed = true;
+            aim = (u < 0.55) ? walls_panelWorld(TP_WINDOW.x, TP_WINDOW.y) : walls_panelWorld(TP_DOOR.x, TP_DOOR.y);
+        } else if (stepIdx === ST_FLASHING) {
+            // No activeMesh here (same reasoning as ST_FINAL_FASTEN below):
+            // the flashing pieces use their own galvanized-steel material,
+            // not panelMat/panelHighlightMat, so they're left out of the
+            // generic highlight-swap rather than mis-tinted by it.
+            var flTop = walls_pulseAt(u, 0.25, 0.16);
+            var flL = walls_pulseAt(u, 0.58, 0.16);
+            var flR = walls_pulseAt(u, 0.88, 0.16);
+            flash = Math.max(flTop, flL, flR);
+            gripClosed = true;
+            if (u < 0.4) { aim = walls_panelWorld(TP_FLASH_TOP.x, TP_FLASH_TOP.y); }
+            else if (u < 0.72) { aim = walls_panelWorld(TP_FLASH_L.x, TP_FLASH_L.y); }
+            else { aim = walls_panelWorld(TP_FLASH_R.x, TP_FLASH_R.y); }
+        } else if (stepIdx === ST_ELECTRICAL) {
+            var elA = walls_pulseAt(u, 0.3, 0.15);
+            var elB = walls_pulseAt(u, 0.85, 0.15);
+            flash = Math.max(elA, elB);
+            gripClosed = true;
+            aim = (u < 0.55) ? walls_panelWorld(TP_ELEC_A.x, TP_ELEC_A.y) : walls_panelWorld(TP_ELEC_B.x, TP_ELEC_B.y);
+        } else if (stepIdx === ST_INSULATION) {
+            // Nozzle-only beat: the main framing arm rests while the
+            // spray-foam nozzle sweeps the cavity left to right, each bay
+            // expanding to full cavity depth as the nozzle passes it.
+            var nozzleT = walls_clamp(u, 0, 1);
+            var nozzleX = walls_lerp(-2.6, 2.6, nozzleT);
+            sprayNozzle.position.set(STATION_X + nozzleX, PLATFORM_TOP_Y + PANEL_H / 2, STATION_Z - (CHAN_D / 2 + 0.2));
+            sprayNozzle.visible = true;
+            for (var fbk = 0; fbk < foamBays.length; fbk++) {
+                var bayT = (fbk + 0.5) / foamBays.length;
+                var fillT = walls_easeOutCubic(walls_clamp((u - bayT + 0.12) / 0.12, 0, 1));
+                foamBays[fbk].mesh.scale.z = walls_clamp(0.06 + fillT * 0.94, 0.06, 1);
+            }
+            aim = REST_POINT;
+            gripClosed = false;
+        } else if (stepIdx === ST_CURE) {
+            // Brief simulated dwell/cure: real two-part spray foam needs a
+            // short cure/off-gas window before the cavity is closed up.
+            // No new geometry - the filled foam just sits, arm rests.
+            foamMat.emissiveIntensity = 0.08 + (Math.sin(elapsed * 4.0) * 0.5 + 0.5) * 0.1;
+            aim = REST_POINT;
+            gripClosed = false;
+        } else if (stepIdx === ST_INTERIOR_GIB) {
+            // Same vacuum-lifter process as exterior sheathing (step 3),
+            // applied from the interior/open face now that the cavity is
+            // insulated and cured.
+            var vacPosInt;
+            if (u < 0.4) {
+                var vacTravelTi = walls_easeOutCubic(u / 0.4);
+                vacPosInt = walls_lerpPt(VAC_PARK_INT, VAC_HOVER_INT, vacTravelTi);
+                interiorSheetMesh.visible = false;
+            } else if (u < 0.75) {
+                var vacPlaceTi = walls_easeInOutSine((u - 0.4) / 0.35);
+                vacPosInt = walls_lerpPt(VAC_HOVER_INT, VAC_FINAL_INT, vacPlaceTi);
+                interiorSheetMesh.visible = true;
+                interiorSheetMesh.position.set(TP_SHEET_INT.x, TP_SHEET_INT.y, (vacPosInt.z + VAC_CUP_GAP) - STATION_Z);
+            } else {
+                var vacRetractTi = walls_easeInOutSine((u - 0.75) / 0.25);
+                vacPosInt = walls_lerpPt(VAC_FINAL_INT, VAC_PARK_INT, vacRetractTi);
+                interiorSheetMesh.visible = true;
+                interiorSheetMesh.position.set(TP_SHEET_INT.x, TP_SHEET_INT.y, TP_SHEET_INT.z);
+            }
+            vacuumEffector.position.set(vacPosInt.x, vacPosInt.y, vacPosInt.z);
+            vacuumEffector.visible = true;
+            aim = REST_POINT;
+            gripClosed = false;
+        } else if (stepIdx === ST_FINAL_FASTEN) {
+            // Interior GIB fixed off - fastening flashes along its
+            // perimeter. Deliberately no activeMesh swap here: the
+            // interior sheet has its own material (interiorGibMat), not
+            // panelMat/panelHighlightMat, so it's left out of the generic
+            // highlight-swap below rather than mis-tinted by it.
+            var ffTop = walls_pulseAt(u, 0.2, 0.14);
+            var ffMid = walls_pulseAt(u, 0.55, 0.14);
+            var ffBottom = walls_pulseAt(u, 0.86, 0.14);
+            flash = Math.max(ffTop, ffMid, ffBottom);
+            gripClosed = true;
+            if (u < 0.38) { aim = walls_panelWorld(0, PANEL_H - CHAN_T); }
+            else if (u < 0.7) { aim = walls_panelWorld(0, PANEL_H / 2); }
+            else { aim = walls_panelWorld(0, CHAN_T); }
+        } else if (stepIdx === ST_SILICONE) {
+            var silTopT = walls_clamp(u / 0.22, 0, 1);
+            var silRightT = walls_clamp((u - 0.22) / 0.22, 0, 1);
+            var silBottomT = walls_clamp((u - 0.44) / 0.22, 0, 1);
+            var silLeftT = walls_clamp((u - 0.66) / 0.22, 0, 1);
+            siliconeTop.scale.x = walls_clamp(0.05 + silTopT * 0.95, 0.05, 1);
+            siliconeRight.scale.y = walls_clamp(0.05 + silRightT * 0.95, 0.05, 1);
+            siliconeBottom.scale.x = walls_clamp(0.05 + silBottomT * 0.95, 0.05, 1);
+            siliconeLeft.scale.y = walls_clamp(0.05 + silLeftT * 0.95, 0.05, 1);
+            gripClosed = true;
+            if (u < 0.22) { aim = walls_panelWorld(TP_SIL_TOP.x, TP_SIL_TOP.y); }
+            else if (u < 0.44) { aim = walls_panelWorld(TP_SIL_RIGHT.x, TP_SIL_RIGHT.y); }
+            else if (u < 0.66) { aim = walls_panelWorld(TP_SIL_BOTTOM.x, TP_SIL_BOTTOM.y); }
+            else { aim = walls_panelWorld(TP_SIL_LEFT.x, TP_SIL_LEFT.y); }
+        } else if (stepIdx === ST_QC) {
+            // Fixed laser QA gate (per Autovol-Machine-Breakdown.pdf item
+            // 10's real alternative to a dedicated scanning robot): a
+            // cyan scan plane sweeps the panel checking dimensional
+            // tolerance, insulation fill, fastening, and weatherproofing
+            // before the panel leaves the line.
+            var scanY = walls_lerp(CHAN_T, PANEL_H - CHAN_T, u);
+            qcScanPlane.position.set(0, scanY, 0);
+            qcScanPlane.visible = true;
+            qcScanMat.opacity = 0.35 + (Math.sin(elapsed * 10.0) * 0.5 + 0.5) * 0.35;
+            aim = REST_POINT;
+            gripClosed = false;
         } else if (stepIdx === ST_COMPLETE) {
             // whole-panel glow pulse beat, reusing the marriage.js-style
             // sinusoidal emissive pulse pattern, applied to the shared
@@ -5984,6 +6388,40 @@ function buildWallsLine(scene, THREE) {
             walls_setHoloProgress(BUILD_STEPS[stepIdx].progress);
             lastAnnouncedStep = stepIdx;
         }
+
+        // ---- AMR material-fetch loop: independent of the panel build
+        //      cycle above, runs on its own slower period between the
+        //      pallet rack and the station side. Carries cargo out,
+        //      returns empty.
+        var amrT = (elapsed % AMR_LOOP_PERIOD) / AMR_LOOP_PERIOD;
+        var amrPos, amrCarrying;
+        if (amrT < 0.4) {
+            var amrOutT = walls_easeInOutSine(amrT / 0.4);
+            amrPos = walls_lerpPt(
+                { x: AMR_STAGE.x, y: 0, z: AMR_STAGE.z },
+                { x: AMR_DROP.x, y: 0, z: AMR_DROP.z },
+                amrOutT
+            );
+            amrCarrying = amrT > 0.04;
+        } else if (amrT < 0.55) {
+            amrPos = { x: AMR_DROP.x, y: 0, z: AMR_DROP.z };
+            amrCarrying = amrT < 0.5;
+        } else if (amrT < 0.95) {
+            var amrBackT = walls_easeInOutSine((amrT - 0.55) / 0.4);
+            amrPos = walls_lerpPt(
+                { x: AMR_DROP.x, y: 0, z: AMR_DROP.z },
+                { x: AMR_STAGE.x, y: 0, z: AMR_STAGE.z },
+                amrBackT
+            );
+            amrCarrying = false;
+        } else {
+            amrPos = { x: AMR_STAGE.x, y: 0, z: AMR_STAGE.z };
+            amrCarrying = false;
+        }
+        amrGroup.position.set(amrPos.x, 0, amrPos.z);
+        var amrDX = AMR_DROP.x - AMR_STAGE.x, amrDZ = AMR_DROP.z - AMR_STAGE.z;
+        amrGroup.rotation.y = (amrT < 0.5) ? Math.atan2(amrDX, amrDZ) : Math.atan2(-amrDX, -amrDZ);
+        amrCargo.visible = amrCarrying;
     }
 
     // ===================================================================
