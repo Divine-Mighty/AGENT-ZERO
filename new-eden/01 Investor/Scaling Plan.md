@@ -22,17 +22,17 @@ Before any replication conversation is credible, Factory 01 needs to demonstrate
 - At least initial traction in **both** channels — residential sales and/or a disaster-relief pilot deployment or first agency relationship — so Phase 2 isn't scaling a single-channel bet. See [[Market Opportunity (Illustrative Model)]].
 - A stable NCC/AS-NZS certification position for the residential product (see [[Risks & Mitigations]] on certification timeline risk) — replicating a factory before the product itself is certified compounds risk rather than reducing it.
 
-**Phase 1 exit criteria (fillable):**
+**Phase 1 exit criteria (illustrative targets — update Status as milestones are actually hit):**
 
-| Criterion | Target | Status |
+| Criterion | Illustrative target | Status |
 |---|---|---|
-| Units produced at Factory 01 | `[INSERT]` | `[INSERT]` |
-| Validated robotics-line uptime % | `[INSERT]` | `[INSERT]` |
-| Residential units sold | `[INSERT]` | `[INSERT]` |
-| Disaster-relief pods deployed/contracted | `[INSERT]` | `[INSERT]` |
-| Certification status | `[INSERT]` | `[INSERT]` |
+| Units produced at Factory 01 | ≥150 cumulative units | Not yet started |
+| Validated robotics-line uptime % | ≥80%, sustained over a full production quarter | Not yet started |
+| Residential units sold | ≥80 units | Not yet started |
+| Disaster-relief pods deployed/contracted | ≥6 pods (pilot + first agency relationship) | Not yet started |
+| Certification status | Full NCC/AS-NZS certification for the residential product, plus at least one relief-pod role configuration | Not yet started |
 
-> ⚠️ Illustrative assumption — validate with real data before use in an actual pitch.
+> ⚠️ Illustrative assumption, internally consistent within this vault — not sourced data. Validate with real data before use in an actual pitch.
 
 ---
 
@@ -54,15 +54,15 @@ Site selection for a second factory should weigh, at minimum:
 - **Labor market for the non-automated stages**: interiors/MEP and QC remain labor-driven per [[Unit Economics]] — site selection needs real regional labor-market input, not just a robotics/logistics lens.
 - **Capex funding**: Factory 02's build-out is a direct line item in [[The Ask]] — this plan and that fundraising ask should stay in sync as real numbers develop.
 
-**Phase 3 exit criteria (fillable):**
+**Phase 3 exit criteria (illustrative targets — update Status as milestones are actually hit):**
 
-| Criterion | Target | Status |
+| Criterion | Illustrative target | Status |
 |---|---|---|
-| Factory 02 site selected | `[INSERT]` | `[INSERT]` |
-| Factory 02 capex committed | `[INSERT]` | `[INSERT]` |
-| Factory 02 commissioning timeline | `[INSERT]` | `[INSERT]` |
+| Factory 02 site selected | Site secured under option or LOI, meeting the logistics/channel-balance/labor criteria above | Not yet started |
+| Factory 02 capex committed | Full Factory 02 build capex funded, sized from real Factory 01 cost data (not the illustrative figures in [[Unit Economics]]) | Not yet started |
+| Factory 02 commissioning timeline | ≤18 months from site selection to first unit off the line | Not yet started |
 
-> ⚠️ Illustrative assumption — validate with real data before use in an actual pitch.
+> ⚠️ Illustrative assumption, internally consistent within this vault — not sourced data. Validate with real data before use in an actual pitch.
 
 ## Phase 4 — Steady-state multi-factory operation
 
