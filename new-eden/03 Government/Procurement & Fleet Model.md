@@ -5,7 +5,7 @@ aliases: [Fleet Model, Procurement Model]
 
 # Procurement & Fleet Model
 
-← [[Home]]
+← [[Government Home]]
 
 This note outlines how an emergency-management agency might structure acquisition, depot storage, and fleet maintenance for a reserve of NE-DR-401 units. It describes an operating model, not a costed proposal — see [[Total Cost of Ownership Model]] for the illustrative budget framework.
 
@@ -34,7 +34,7 @@ A fleet plan should specify, per region, which combination of these paths is the
 
 ## Fleet maintenance and compliance tracking via the digital twin
 
-Every unit is factory-tagged with a QR digital-twin ID as part of the standard 8-stage build process (see [[Home]]), showing "Inspection Passed" status at time of manufacture. For a distributed reserve fleet, this is the mechanism that turns a one-time factory compliance check into an ongoing fleet-management capability:
+Every unit is factory-tagged with a QR digital-twin ID as part of the standard 8-stage build process (see [[Government Home]]), showing "Inspection Passed" status at time of manufacture. For a distributed reserve fleet, this is the mechanism that turns a one-time factory compliance check into an ongoing fleet-management capability:
 
 - **Per-unit inspection history.** Each unit's digital twin can carry its inspection record forward — factory QC, delivery inspection, and subsequent periodic inspections while in depot storage or after a deployment cycle — rather than relying on paper records held separately from the physical asset.
 - **Compliance status at a glance across a distributed fleet.** An agency operating units across multiple regional depots can use the QR/digital-twin system to verify, unit by unit, that each is current on the inspection and compliance requirements described in [[Compliance for Emergency Life-Safety Use]] — particularly relevant for the electrical and gas service-port connections that undergo repeated field connect/disconnect cycles.

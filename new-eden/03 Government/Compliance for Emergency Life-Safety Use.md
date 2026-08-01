@@ -5,9 +5,9 @@ aliases: [Compliance, Standards, Life-Safety Compliance]
 
 # Compliance for Emergency Life-Safety Use
 
-← [[Home]]
+← [[Government Home]]
 
-The NE-DR-401 is not a general-purpose modular building deployed in ordinary conditions — it is a life-safety product deployed specifically **into** the acute conditions that trigger an emergency response. That reframes what "standards compliance" needs to mean for this unit, which is the founder position stated on [[Home]]: Australian NCC and AS/NZS standards are treated as the **regulatory floor, not the target**.
+The NE-DR-401 is not a general-purpose modular building deployed in ordinary conditions — it is a life-safety product deployed specifically **into** the acute conditions that trigger an emergency response. That reframes what "standards compliance" needs to mean for this unit, which is the founder position stated on [[Government Home]]: Australian NCC and AS/NZS standards are treated as the **regulatory floor, not the target**.
 
 > **Standards note:** This document describes the standards *families* relevant to the NE-DR-401 and why each matters for emergency use, at the level of "this standard governs X, here is why it matters here." It does not cite specific clause numbers, editions, or test results, and should not be read as a certification claim. Formal compliance and certification documentation is a separate deliverable from this vault.
 
@@ -23,7 +23,7 @@ A residential module is expected to be commissioned once, in planned conditions,
 ## Standards families relevant to the NE-DR-401
 
 ### Accessibility — AS 1428 family
-Governs accessible design: clear width of doorways and circulation space, ramp gradients, accessible sanitary facilities, and related provisions. For a unit that may serve as a Medical or Accommodation space in the first hours after a disaster, accessibility cannot be assumed away because occupants are "temporary" — the population needing triage, treatment, or emergency housing after a bushfire or flood event includes people with existing mobility constraints, people newly injured, and elderly evacuees who are statistically over-represented in disaster-affected populations. Egress steps and entry provisions are part of the unit's standard fit-out (see [[Home]]); the accessibility standard is the reference point for whether that provision is sufficient for the intended use, not just for a minimum commercial fit-out.
+Governs accessible design: clear width of doorways and circulation space, ramp gradients, accessible sanitary facilities, and related provisions. For a unit that may serve as a Medical or Accommodation space in the first hours after a disaster, accessibility cannot be assumed away because occupants are "temporary" — the population needing triage, treatment, or emergency housing after a bushfire or flood event includes people with existing mobility constraints, people newly injured, and elderly evacuees who are statistically over-represented in disaster-affected populations. Egress steps and entry provisions are part of the unit's standard fit-out (see [[Government Home]]); the accessibility standard is the reference point for whether that provision is sufficient for the intended use, not just for a minimum commercial fit-out.
 
 ### Structural wind and general actions — AS/NZS 1170 family
 Governs structural design actions, including wind loading. This is the standard most directly connected to the unit's actual use case: the wind-loading provisions exist to keep a structure standing in a storm, and the NE-DR-401 is specifically intended to be staged and occupied around cyclone, severe storm, and flood events — the same event classes that drive wind design categories in the first place. A structure whose worst-case load scenario coincides with its primary deployment trigger needs its structural rating treated as a first-order design input, not a compliance checkbox applied after the fact.

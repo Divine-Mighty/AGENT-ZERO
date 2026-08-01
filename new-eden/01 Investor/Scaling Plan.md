@@ -77,4 +77,4 @@ At this stage the model shifts from "prove and replicate" to "operate a network"
 The core scaling risk is replicating capex before Factory 01's throughput, quality, and dual-channel demand are actually proven — this would compound the capex risk flagged in [[Risks & Mitigations]] rather than reduce it. Phase gates above exist specifically to prevent that.
 
 ## Related notes
-[[The Thesis]] · [[Market Opportunity (Illustrative Model)]] · [[Unit Economics]] · [[Moat & Defensibility]] · [[Risks & Mitigations]] · [[The Ask]] · [[Home]]
+[[The Thesis]] · [[Market Opportunity (Illustrative Model)]] · [[Unit Economics]] · [[Moat & Defensibility]] · [[Risks & Mitigations]] · [[The Ask]] · [[Investor Home]]

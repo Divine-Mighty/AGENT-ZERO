@@ -76,4 +76,4 @@ The two products share the base chassis and most of the 8-stage line, but diverg
 5. Separate cost models per residential finish tier and per disaster-relief role configuration, rather than one blended number.
 
 ## Related notes
-[[The Thesis]] · [[Market Opportunity (Illustrative Model)]] · [[Moat & Defensibility]] · [[Scaling Plan]] · [[Risks & Mitigations]] · [[The Ask]] · [[Home]]
+[[The Thesis]] · [[Market Opportunity (Illustrative Model)]] · [[Moat & Defensibility]] · [[Scaling Plan]] · [[Risks & Mitigations]] · [[The Ask]] · [[Investor Home]]

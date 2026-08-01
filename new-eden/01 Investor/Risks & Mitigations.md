@@ -58,4 +58,4 @@ tags: [investor-vault, risks, new-eden]
 Several of these risks compound each other if left unmanaged: certification delay (#3) extends the period before Factory 01 needs to prove itself (#1, #2), while market-adoption uncertainty (#4) and tender lumpiness (#5) both argue for keeping Factory 02+ capex (see [[Scaling Plan]]) firmly gated behind Factory 01 proof points rather than run in parallel.
 
 ## Related notes
-[[The Thesis]] · [[Market Opportunity (Illustrative Model)]] · [[Unit Economics]] · [[Moat & Defensibility]] · [[Scaling Plan]] · [[The Ask]] · [[Home]]
+[[The Thesis]] · [[Market Opportunity (Illustrative Model)]] · [[Unit Economics]] · [[Moat & Defensibility]] · [[Scaling Plan]] · [[The Ask]] · [[Investor Home]]

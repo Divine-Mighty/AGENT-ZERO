@@ -77,4 +77,4 @@ This is the more volatile of the two channels by nature — a single missed or d
 - **Cross-subsidized brand equity**: government-procured disaster-relief pods in the field are also a public, visible demonstration of build quality that plausibly supports residential brand trust — a qualitative effect, not one this model attempts to quantify.
 
 ## Related notes
-[[The Thesis]] · [[Unit Economics]] · [[Moat & Defensibility]] · [[Scaling Plan]] · [[Risks & Mitigations]] · [[The Ask]] · [[Home]]
+[[The Thesis]] · [[Unit Economics]] · [[Moat & Defensibility]] · [[Scaling Plan]] · [[Risks & Mitigations]] · [[The Ask]] · [[Investor Home]]

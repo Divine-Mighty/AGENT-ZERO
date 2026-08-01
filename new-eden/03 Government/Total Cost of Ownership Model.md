@@ -5,7 +5,7 @@ aliases: [TCO Model, Total Cost of Ownership]
 
 # Total Cost of Ownership Model
 
-← [[Home]]
+← [[Government Home]]
 
 > **This is an illustrative framework, not a costed proposal.** No real acquisition price, maintenance cost, or incumbent-option cost data has been sourced for this model. It exists to show the *shape* of the total-cost-of-ownership question an agency should ask, and the variables that a real quote-based model would need to fill in. Every dollar figure an agency uses in an actual budget submission should come from a formal quote, not from this document.
 

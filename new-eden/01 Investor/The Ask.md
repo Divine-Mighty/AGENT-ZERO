@@ -56,4 +56,4 @@ Rather than sizing the ask to an arbitrary runway length, size it to the Phase 1
 Consistent with the integrity constraint running through this vault: this note does not include a market-size-derived revenue projection, a comparable-company valuation benchmark, or a cited industry funding-round comparison, because none of that research was done. Any version of this note used in an actual raise needs those inputs sourced properly first — see the flags throughout [[Market Opportunity (Illustrative Model)]] and [[Unit Economics]].
 
 ## Related notes
-[[The Thesis]] · [[Market Opportunity (Illustrative Model)]] · [[Unit Economics]] · [[Moat & Defensibility]] · [[Scaling Plan]] · [[Risks & Mitigations]] · [[Home]]
+[[The Thesis]] · [[Market Opportunity (Illustrative Model)]] · [[Unit Economics]] · [[Moat & Defensibility]] · [[Scaling Plan]] · [[Risks & Mitigations]] · [[Investor Home]]

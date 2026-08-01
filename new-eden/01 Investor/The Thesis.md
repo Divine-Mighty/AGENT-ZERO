@@ -37,4 +37,4 @@ The founder directive treats Australian NCC/AS-NZS standards as a floor, not a t
 - The digital-twin/service layer is actually built out into a monetizable product, not left as a QR sticker.
 
 ## Related notes
-[[Home]] · [[Market Opportunity (Illustrative Model)]] · [[Unit Economics]] · [[Moat & Defensibility]] · [[Scaling Plan]] · [[Risks & Mitigations]] · [[The Ask]]
+[[Investor Home]] · [[Market Opportunity (Illustrative Model)]] · [[Unit Economics]] · [[Moat & Defensibility]] · [[Scaling Plan]] · [[Risks & Mitigations]] · [[The Ask]]

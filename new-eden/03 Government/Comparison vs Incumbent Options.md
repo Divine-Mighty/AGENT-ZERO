@@ -5,9 +5,9 @@ aliases: [Incumbent Comparison, Category Comparison]
 
 # Comparison vs Incumbent Options
 
-← [[Home]]
+← [[Government Home]]
 
-> **Framing note:** No named competitor products or sourced third-party benchmarking data were used to build this comparison. The rows below describe **generic incumbent categories** — canvas tents, converted shipping containers without structural engineering, caravans, and basic demountables — as archetypes commonly used in disaster response today, for the purpose of illustrating where the NE-DR-401's design choices matter operationally. Figures for the NE-DR-401 are the stated engineering facts from [[Home]]; figures and characterisations for incumbent categories are qualitative and illustrative, not measured. Any procurement evaluation should substitute real quotes, test data, and agency-specific benchmarks before this table informs a decision.
+> **Framing note:** No named competitor products or sourced third-party benchmarking data were used to build this comparison. The rows below describe **generic incumbent categories** — canvas tents, converted shipping containers without structural engineering, caravans, and basic demountables — as archetypes commonly used in disaster response today, for the purpose of illustrating where the NE-DR-401's design choices matter operationally. Figures for the NE-DR-401 are the stated engineering facts from [[Government Home]]; figures and characterisations for incumbent categories are qualitative and illustrative, not measured. Any procurement evaluation should substitute real quotes, test data, and agency-specific benchmarks before this table informs a decision.
 
 ## Comparison dimensions
 

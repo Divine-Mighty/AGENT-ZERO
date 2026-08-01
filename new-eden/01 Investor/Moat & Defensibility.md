@@ -47,4 +47,4 @@ Building to the standard 40ft Hi-Cube ISO envelope with 8x ISO 1161 corner casti
 - Underinvestment in the disaster-relief channel's government relationships, which are a sales-motion moat as much as a product one.
 
 ## Related notes
-[[The Thesis]] · [[Market Opportunity (Illustrative Model)]] · [[Unit Economics]] · [[Scaling Plan]] · [[Risks & Mitigations]] · [[The Ask]] · [[Home]]
+[[The Thesis]] · [[Market Opportunity (Illustrative Model)]] · [[Unit Economics]] · [[Scaling Plan]] · [[Risks & Mitigations]] · [[The Ask]] · [[Investor Home]]

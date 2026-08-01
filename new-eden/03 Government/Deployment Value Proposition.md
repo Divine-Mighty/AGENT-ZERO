@@ -5,7 +5,7 @@ aliases: [Value Proposition, Deployment Case]
 
 # Deployment Value Proposition
 
-← [[Home]]
+← [[Government Home]]
 
 The operational case for the NE-DR-401 rests on four measurable properties: deployment speed, transport compatibility, storage density, and service life. Each maps to a specific gap in how agencies currently stage and field emergency infrastructure.
 
