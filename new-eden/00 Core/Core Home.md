@@ -18,6 +18,7 @@ The vault is organized into five groups: brand framing, the two product lines, h
 ## Manufacturing & Factory
 - [[Manufacturing Process]] — the 8-stage production line
 - [[Factory & Automation Stack]] — ABB / FrameCAD / digital twin architecture, and an honest read on "Zero Human Input"
+- [[Tolerance Management Architecture (R&D)]] — proposed (unbuilt, unvalidated) closed-loop tolerance-budget architecture for the Stage 1→3→5 chassis→framing→cladding stack-up
 
 ## Shared Physical Platform
 - [[Dimensions & ISO Compatibility]] — the 40ft Hi-Cube chassis geometry and why it was chosen

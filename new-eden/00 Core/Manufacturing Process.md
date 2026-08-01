@@ -19,7 +19,7 @@ Marketing banner: **"AI Powered Production | ABB Robotics | Digital Twin Monitor
 ## Stage 3 — Wall Framing
 **What happens**: wall frames are erected "by ABB robots."
 **Equipment/cell**: roll-formed steel wall studs (again FrameCAD-class output) are picked, positioned, and fastened (screwed/riveted) by ABB articulated-arm robots working from the module's digital model, forming door/window rough openings — including the continuous structural lintel needed for the continuous window band and glass garage door features.
-**QC gate**: robotic vision-guided dimensional check of every rough opening against the digital twin model before cladding/glazing crews (or the equivalent robotic cells) are scheduled, since an out-of-tolerance opening cascades into every glazing feature downstream.
+**QC gate**: robotic vision-guided dimensional check of every rough opening against the digital twin model before cladding/glazing crews (or the equivalent robotic cells) are scheduled, since an out-of-tolerance opening cascades into every glazing feature downstream. See [[Tolerance Management Architecture (R&D)]] for a proposed (unbuilt) closed-loop registration scheme addressing how this stage's placement accuracy compounds with Stage 1 chassis variance and Stage 5 cladding registration.
 
 ## Stage 4 — Roof Trusses
 **What happens**: roll-formed roof trusses are lowered into place.
@@ -29,7 +29,7 @@ Marketing banner: **"AI Powered Production | ABB Robotics | Digital Twin Monitor
 ## Stage 5 — Exterior Cladding
 **What happens**: zinc and woodgrain panels are installed.
 **Equipment/cell**: the magnetic cladding system (feature 22) is designed specifically to be robot-friendly — panels are picked and placed onto the batten sub-frame by a robotic arm using the magnetic alignment pins for self-locating placement, then the mechanical retaining clip is engaged (potentially robotically, or as one of the more likely manual-assist points on the line given the fine tolerance of visible shadow-gap reveals — see [[Factory & Automation Stack]]).
-**QC gate**: reveal/shadow-gap width consistency check (feature 3) and a finish/colour-match inspection across the Zinc Monument, Woodland Grey, and Night Sky palette (see [[Materials & Finishes]]) before the roof stage seals the envelope.
+**QC gate**: reveal/shadow-gap width consistency check (feature 3) and a finish/colour-match inspection across the Zinc Monument, Woodland Grey, and Night Sky palette (see [[Materials & Finishes]]) before the roof stage seals the envelope. [[Tolerance Management Architecture (R&D)]] proposes a specific tolerance budget and disposition path for this check — including what happens when a unit passes the Stage 1 structural gate below but still carries enough residual warp to threaten reveal consistency here.
 
 ## Stage 6 — Roof & Flashings
 **What happens**: a standing-seam roof is installed.
@@ -47,4 +47,4 @@ Marketing banner: **"AI Powered Production | ABB Robotics | Digital Twin Monitor
 **QC gate**: this stage *is* the final QC gate — final inspection sign-off is what the "Inspection Passed" wording on the signature plaque certifies, and it is the point at which the module's full digital twin record (every prior stage's QC data) is closed out and linked to the serial number for the module's entire subsequent service life (see [[Product Line - Disaster Relief Pod]] on why this matters for emergency-services trust).
 
 ## Cross-reference
-See [[Factory & Automation Stack]] for the equipment/software architecture that ties these eight stages together (ABB robotics, FrameCAD roll-forming, MES/digital twin), and for a direct discussion of which stages above are plausibly "zero human input" and which almost certainly are not.
+See [[Factory & Automation Stack]] for the equipment/software architecture that ties these eight stages together (ABB robotics, FrameCAD roll-forming, MES/digital twin), and for a direct discussion of which stages above are plausibly "zero human input" and which almost certainly are not. See [[Tolerance Management Architecture (R&D)]] for a proposed engineering answer to the Stage 1→3→5 tolerance stack-up flagged in [[Engineering Feasibility]] as the concept's single most technically demanding claim.

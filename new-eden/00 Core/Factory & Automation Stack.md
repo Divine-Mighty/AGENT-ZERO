@@ -41,3 +41,4 @@ Marketing banners compress a real, defensible automation story into a slogan. So
 - Stage-by-stage equipment mapping: [[Manufacturing Process]]
 - Chassis geometry that standardizes every robotic cell's reference datum: [[Dimensions & ISO Compatibility]]
 - Features whose feasibility depends directly on this automation stack: [[Product Line - Residential]] (features 16, 17, 22, 23, 25, 26)
+- Proposed (unbuilt) closed-loop metrology/registration architecture that feeds the digital twin layer above and directly addresses the Stage 1→3→5 tolerance stack-up: [[Tolerance Management Architecture (R&D)]]
