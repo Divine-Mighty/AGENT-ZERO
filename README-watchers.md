@@ -49,9 +49,13 @@ so a luminance or difference key tears straight through the hood and
 shoulders. The matte also ends on a flat cut at the hem, so the last tenth is
 feathered and he dissolves into the void instead of stopping on a line.
 
-He stands in front of the wings, which is why the wings are deliberately wider
-than the viewport and lifted to shoulder height -- what should read is the
-span either side of him, not the whole wing.
+He stands in front of the wings, and the two are aligned rather than
+independently placed: `src/wings.js` reads his live bounding box each fit and
+puts the point where the wings meet along their spine (`WING_ANCHOR`, 0.30
+down their bounding box) onto his shoulder line (`FIG_SHOULDER`, 0.32 down
+his). Both fractions were measured off the assets. Because it works off his
+rendered box, the alignment holds at every breakpoint where his height
+changes.
 
 ## The wings
 

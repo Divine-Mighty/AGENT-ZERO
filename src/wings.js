@@ -13,7 +13,15 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 const BONE = new Color(0xE9DFC8);
 const FOV = 34;
 
+// Where the wings meet along the spine, as a fraction down their bounding
+// box, and where the figure's shoulders sit as a fraction down his. Both were
+// measured off the assets. Lining these two points up is what makes the pair
+// read as growing out of his back rather than floating behind him.
+const WING_ANCHOR = 0.30;
+const FIG_SHOULDER = 0.32;
+
 const host = document.getElementById('wings');
+const figure = document.querySelector('.figure');
 const fallback = document.getElementById('wings-flat');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -89,13 +97,21 @@ function start() {
     // than the viewport: what should read is the span either side of him, not
     // the whole wing. Vertical overflow is fine and expected.
     const half = Math.tan((FOV * Math.PI) / 360);
-    const coverW = camera.aspect < 1 ? 2.1 : 1.62;
+    const coverW = camera.aspect < 1 ? 1.45 : 1.02;
     camera.position.z = dims.x / coverW / (2 * half * camera.aspect);
     camera.updateProjectionMatrix();
 
-    // lift them to sit behind his shoulders rather than centred on the page
+    // Put the wings' spine on the figure's shoulders. Measured off his live
+    // box rather than assumed, so this holds at every breakpoint where his
+    // height changes.
     const visibleH = 2 * camera.position.z * half;
-    pivot.position.y = visibleH * 0.13;
+    let target = 0.40;
+    if (figure) {
+      const box = figure.getBoundingClientRect();
+      if (box.height) target = (box.top + box.height * FIG_SHOULDER) / h;
+    }
+    pivot.position.y = (0.5 - target) * visibleH
+      - (0.5 - WING_ANCHOR) * dims.y;
   }
 
   new GLTFLoader().parse(toBuffer(window.__WINGS_GLB__), '', (gltf) => {
@@ -139,6 +155,10 @@ function start() {
   }
 
   addEventListener('resize', () => { resize(); if (reduced.matches) loop(); });
+  // his box drives the wing placement, so re-fit once he has real dimensions
+  if (figure && !figure.complete) {
+    figure.addEventListener('load', () => { resize(); loop(); }, { once: true });
+  }
   reduced.addEventListener('change', loop);
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) cancelAnimationFrame(raf);
