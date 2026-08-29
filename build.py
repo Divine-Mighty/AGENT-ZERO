@@ -184,6 +184,18 @@ GLB = "assets/angel_wings.glb"
 BUNDLE = "src/wings.bundle.js"
 
 
+FIGURE = "assets/hero-model.webp"
+
+
+def figure_uri():
+    """The cut-out hero shot, alpha-matted out of the lookbook frame."""
+    if not os.path.exists(FIGURE):
+        raise SystemExit("missing " + FIGURE)
+    with open(FIGURE, "rb") as fh:
+        return "data:image/webp;base64," + base64.b64encode(
+            fh.read()).decode("ascii")
+
+
 def glb_base64():
     """The wing model, inlined so the page stays one file."""
     if not os.path.exists(GLB):
@@ -287,9 +299,18 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer }
 .bg{ position:absolute; inset:0; pointer-events:none }
 .wings{ position:absolute; inset:0 }
 #wings{ opacity:0; transition:opacity 1.4s ease-out }
-#wings.ready{ opacity:.46 }
+#wings.ready{ opacity:.5 }
 #wings canvas{ display:block; width:100%; height:100% }
 #wings-flat{ color:var(--bone); opacity:.16 }
+.figure{
+  position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+  height:56vh; width:auto; max-width:none; pointer-events:none;
+}
+@media (min-width:640px){ .figure{ height:66vh } }
+@media (min-width:768px){ .figure{ height:82vh } }
+@media (min-width:1024px){ .figure{ height:88vh } }
+.veil{ position:absolute; inset:0; pointer-events:none }
+
 #wings-flat svg{
   position:absolute; left:50%; top:48%; width:min(1480px,152vw); height:auto;
   transform:translate(-50%,-50%);
@@ -587,6 +608,13 @@ def build():
   <div class="bg" aria-hidden="true">
     <div class="wings" id="wings"></div>
     <div class="wings" id="wings-flat" hidden>__WINGS__</div>
+  </div>
+
+  <img class="figure" src="__FIGURE__" decoding="async"
+       alt="Model in the Wraith Hood, hood up and hands raised in a triangle,
+            the WATCHERS blackletter lockup printed across the chest.">
+
+  <div class="veil" aria-hidden="true">
     <div class="scan"></div>
     <div class="vig"></div>
   </div>
@@ -679,6 +707,7 @@ def build():
             .replace("__FONTS__", FONTS)
             .replace("__CSS__", CSS)
             .replace("__WINGS__", load_wing())
+            .replace("__FIGURE__", figure_uri())
             .replace("__GLB__", glb_base64())
             .replace("__BUNDLE__", load_bundle())
             .replace("__MARK__", MARK)

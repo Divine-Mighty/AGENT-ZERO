@@ -8,9 +8,13 @@ Single-page drop site. Dark, print-shop aesthetic. Bone on black.
 npm install                       # three + esbuild, first time only
 npx esbuild src/wings.js --bundle --format=iife --minify \
     --target=es2019 --outfile=src/wings.bundle.js
-python3 wing2.py                  # assets/angel_wings.glb -> wing_frag.svg
+python3 cutout.py                 # hero-source.png -> hero-model.webp
+python3 wing2.py                  # angel_wings.glb -> wing_frag.svg
 python3 build.py                  # -> watchers-site.html
 ```
+
+`cutout.py` and `wing2.py` only need re-running when their source assets
+change; `build.py` is the one you run after editing `PIECES`.
 
 The output is ~4.6MB: the three.js bundle is inlined (~590KB) and the GLB is
 base64'd into the page (~3.6MB), so it stays a single self-contained file with
@@ -33,6 +37,21 @@ headline CTA and their `?piece=` links.
 Where that reference collides with the brand rules it was followed anyway, by
 decision: the full-width nav bar (rather than a floating pill) and the
 backdrop-blurred overlays.
+
+## The hero figure
+
+`assets/hero-source.png` is the lookbook shot. `cutout.py` mattes the figure
+out of it with u2net (`rembg`) and writes `assets/hero-model.webp`, which
+`build.py` inlines.
+
+Segmentation rather than a key: the hoodie is black on a near-black gradient,
+so a luminance or difference key tears straight through the hood and
+shoulders. The matte also ends on a flat cut at the hem, so the last tenth is
+feathered and he dissolves into the void instead of stopping on a line.
+
+He stands in front of the wings, which is why the wings are deliberately wider
+than the viewport and lifted to shoulder height -- what should read is the
+span either side of him, not the whole wing.
 
 ## The wings
 

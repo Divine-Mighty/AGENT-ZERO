@@ -85,14 +85,17 @@ function start() {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     if (!model) return;
-    // pull back far enough for BOTH axes to fit, or the pair gets cropped;
-    // on portrait screens let the span run past the left and right edges
+    // The figure stands in front of these, so the pair is deliberately wider
+    // than the viewport: what should read is the span either side of him, not
+    // the whole wing. Vertical overflow is fine and expected.
     const half = Math.tan((FOV * Math.PI) / 360);
-    const coverW = camera.aspect < 1 ? 1.4 : 0.96;
-    const forWidth = dims.x / coverW / (2 * half * camera.aspect);
-    const forHeight = dims.y / 0.88 / (2 * half);
-    camera.position.z = Math.max(forWidth, forHeight);
+    const coverW = camera.aspect < 1 ? 2.1 : 1.62;
+    camera.position.z = dims.x / coverW / (2 * half * camera.aspect);
     camera.updateProjectionMatrix();
+
+    // lift them to sit behind his shoulders rather than centred on the page
+    const visibleH = 2 * camera.position.z * half;
+    pivot.position.y = visibleH * 0.13;
   }
 
   new GLTFLoader().parse(toBuffer(window.__WINGS_GLB__), '', (gltf) => {
