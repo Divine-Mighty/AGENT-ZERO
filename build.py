@@ -21,6 +21,7 @@ import math
 import os
 
 OUT = "watchers-site.html"
+OUT_ARTIFACT = "watchers-artifact.html"
 WING = "wing_frag.svg"
 
 # --------------------------------------------------------------------------
@@ -719,8 +720,32 @@ def build():
     return page
 
 
+def artifact_page(page):
+    """Same page, reshaped for publishing as an Artifact.
+
+    The Artifact host supplies its own <!doctype>/<html>/<head>/<body>, so the
+    file must carry page content only: title, the font link, the stylesheet,
+    then the markup and scripts.
+    """
+    head = page[page.index("<title>"):page.index("</head>")]
+    # the artifact gallery lists pages by <title>, so it wants the name alone
+    head = head.replace(
+        "<title>WATCHERS&reg; &mdash; Watch everything. Trust no one.</title>",
+        "<title>WATCHERS</title>")
+    body = page[page.index("<body>") + len("<body>"):page.index("</body>")]
+    drop = ('<meta name="theme-color" content="#0A0A0A">',)
+    for tag in drop:
+        head = head.replace(tag, "")
+    return head.strip() + "\n" + body.strip() + "\n"
+
+
 if __name__ == "__main__":
     out = build()
     with open(OUT, "w") as fh:
         fh.write(out)
     print("{}  {:,} bytes  {} pieces".format(OUT, len(out), len(PIECES)))
+
+    art = artifact_page(out)
+    with open(OUT_ARTIFACT, "w") as fh:
+        fh.write(art)
+    print("{}  {:,} bytes".format(OUT_ARTIFACT, len(art)))
