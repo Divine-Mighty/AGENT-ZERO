@@ -16,13 +16,16 @@ list at the top of `build.py` and is the single source of truth.
 ## Layout
 
 Follows the MotionSites "Obsidian" composition: one non-scrolling fullscreen
-stage, overlaid nav bar, headline block top-left, two staggered cards
-bottom-right, floating labels, a vertical scroll cue, and a full-screen menu
-overlay with staggered link entrance.
+stage, overlaid nav bar, headline block top-left, floating labels, a vertical
+scroll cue, and a full-screen menu overlay with staggered link entrance.
+
+The reference's two staggered product cards were dropped by decision, so the
+wings carry the right-hand side alone. Pieces stay reachable through the
+headline CTA and their `?piece=` links.
 
 Where that reference collides with the brand rules it was followed anyway, by
-decision: the full-width nav bar (rather than a floating pill), the gradient
-card overlays, and the backdrop-blurred overlays.
+decision: the full-width nav bar (rather than a floating pill) and the
+backdrop-blurred overlays.
 
 ## The wings
 
@@ -43,9 +46,9 @@ Two things in here are stand-ins, and both are flagged in the source:
   supplied to this repo, so `MARK` in `build.py` is a plain geometric eye. Drop
   the real asset in and replace that function. Do not re-letter the wordmark by
   hand and do not substitute a font for it.
-- **Card art.** `plate_svg()` generates abstract halftone print plates, seeded
-  per slug. They are not photography. Replace with real per-product lookbook
-  shots when they land.
+- **Piece art.** `plate_svg()` generates abstract halftone print plates, seeded
+  per slug, shown in the piece modal. They are not photography. Replace with
+  real per-product lookbook shots when they land.
 
 ## Conventions kept
 

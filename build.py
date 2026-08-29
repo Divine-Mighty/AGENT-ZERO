@@ -327,48 +327,6 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer }
 @media (min-width:640px){ .cta{ padding:12px 24px } }
 .cta:hover{ background:rgba(233,223,200,.1) }
 
-/* ---------- cards ---------- */
-.cards{
-  position:absolute; right:var(--pad); bottom:24px; display:grid;
-  grid-template-columns:repeat(2,auto); gap:12px;
-}
-@media (min-width:640px){ .cards{ bottom:32px; gap:16px } }
-@media (min-width:768px){ .cards{ bottom:48px; gap:20px } }
-.card{
-  position:relative; width:144px; aspect-ratio:1; border-radius:12px;
-  overflow:hidden; display:flex; flex-direction:column;
-  justify-content:flex-end; text-align:left; padding:0;
-  background:var(--panel); border:1px solid var(--line);
-}
-@media (max-width:400px){ .card{ width:126px } }
-@media (min-width:640px){ .card{ width:176px; border-radius:16px } }
-@media (min-width:768px){ .card{ width:208px } }
-@media (min-width:1024px){ .card{ width:240px } }
-.card-a{ grid-column:1; grid-row:1; align-self:end }
-.card-b{ grid-column:2; grid-row:2 }
-.card img{
-  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-  filter:grayscale(1); transition:filter .5s, transform .7s ease-out;
-}
-.card:hover img,.card:focus-visible img{ filter:grayscale(0); transform:scale(1.05) }
-.card .veil{
-  position:absolute; inset:0;
-  background:linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,.2) 55%,
-    transparent);
-}
-.card .body{ position:relative; padding:12px 40px 12px 12px }
-.card .lab{ display:block; color:rgba(233,223,200,.6) }
-@media (min-width:640px){ .card .lab{ font-size:11px } }
-.card .ttl{ display:block; margin:4px 0 0; font-weight:600; font-size:14px;
-  line-height:1.2 }
-@media (min-width:640px){ .card .ttl{ font-size:16px } }
-@media (min-width:768px){ .card-a .ttl{ font-size:18px } }
-.card-b .ttl{ font-size:16px }
-@media (min-width:640px){ .card-b .ttl{ font-size:20px } }
-@media (min-width:768px){ .card-b .ttl{ font-size:24px } }
-.card>.ico{ position:absolute; right:12px; bottom:12px; color:rgba(233,223,200,.7) }
-.card .out{ color:var(--alarm); margin-top:6px; display:block }
-
 /* ---------- floating labels + cue ---------- */
 .floats{ display:none }
 @media (min-width:1024px){ .floats{ display:block } }
@@ -379,8 +337,8 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer }
 .float .dot{ width:5px; height:5px; border-radius:50%; background:var(--bone) }
 .float .dot.live{ background:var(--alarm); animation:rec 1.6s steps(1) infinite }
 @keyframes rec{ 0%,55%{ opacity:1 } 56%,100%{ opacity:.15 } }
-.f1{ top:20%; left:43% }
-.f2{ top:62%; left:calc(50% - 44px) }
+.f1{ top:25%; right:30% }
+.f2{ top:45%; right:15% }
 .cue{ position:absolute; left:50%; bottom:32px; transform:translateX(-50%); display:none }
 @media (min-width:768px){ .cue{ display:block } }
 .cue span{
@@ -561,24 +519,6 @@ def esc(text):
     return html.escape(str(text), quote=True)
 
 
-def card_html(piece, slot, uri):
-    tag = ('<span class="mono out">Sold out</span>' if piece["sold_out"]
-           else "")
-    return (
-        '<button class="card card-{slot}" data-piece="{slug}" '
-        'aria-label="{name}, A${price}. Open details.">'
-        '<img src="{uri}" alt="{alt}" decoding="async">'
-        '<span class="veil"></span>'
-        '<span class="body">'
-        '<span class="mono lab">{label}</span>'
-        '<span class="ttl">{title}</span>{tag}'
-        '</span>{icon}</button>'
-    ).format(slot=slot, slug=esc(piece["slug"]), name=esc(piece["name"]),
-             price=piece["price"], uri=uri, alt=esc(piece["alt"]),
-             label=esc(piece["label"]), title=esc(piece["name"]), tag=tag,
-             icon=ICON)
-
-
 def build():
     import json
 
@@ -600,9 +540,6 @@ def build():
         '<a href="{href}" style="transition-delay:{d}ms" data-close>{t}</a>'
         .format(href=href, t=esc(text), d=150 + 75 * i)
         for i, (text, href) in enumerate(NAV_LINKS + [("Enter", "#drops")]))
-
-    cards = (card_html(featured[0], "a", uris[featured[0]["slug"]])
-             + card_html(featured[1], "b", uris[featured[1]["slug"]]))
 
     page = """<!doctype html>
 <html lang="en">
@@ -656,8 +593,6 @@ def build():
         View the drop __ICON__
       </button>
     </div>
-
-    __CARDS__
 
     <div class="floats" aria-hidden="true">
       <span class="float f1"><span class="dot live"></span>
@@ -720,7 +655,6 @@ def build():
             .replace("__MARK__", MARK)
             .replace("__NAV__", nav)
             .replace("__MENU__", menu_links)
-            .replace("__CARDS__", '<div class="cards">' + cards + "</div>")
             .replace("__LEAD__", featured[0]["slug"])
             .replace("__ICON__", ICON)
             .replace("__JS__", js))
