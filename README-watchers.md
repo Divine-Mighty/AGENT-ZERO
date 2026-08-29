@@ -5,9 +5,16 @@ Single-page drop site. Dark, print-shop aesthetic. Bone on black.
 ## Build
 
 ```bash
-python3 wing2.py     # assets/angel_wings.glb -> wing_frag.svg
-python3 build.py     # PIECES + wing_frag.svg -> watchers-site.html
+npm install                       # three + esbuild, first time only
+npx esbuild src/wings.js --bundle --format=iife --minify \
+    --target=es2019 --outfile=src/wings.bundle.js
+python3 wing2.py                  # assets/angel_wings.glb -> wing_frag.svg
+python3 build.py                  # -> watchers-site.html
 ```
+
+The output is ~4.6MB: the three.js bundle is inlined (~590KB) and the GLB is
+base64'd into the page (~3.6MB), so it stays a single self-contained file with
+no network dependency but the webfonts.
 
 `watchers-site.html` is a generated artifact with every image base64-inlined.
 Never edit it directly; it gets overwritten. Product data lives in the `PIECES`
@@ -29,14 +36,22 @@ backdrop-blurred overlays.
 
 ## The wings
 
-`wing2.py` reads `assets/angel_wings.glb`, projects the mesh to a front view,
-and traces a flat vector silhouette from it. Feather and Wing submeshes are
-split into connected shells so each of the ~850 feathers becomes its own path,
-sorted back to front and shaded in three tonal bands.
+The hero renders `assets/angel_wings.glb` live in three.js: real geometry, its
+own textures, a key and rim light, and a slow yaw/scale drift. The model ships
+with a blue emissive and full-colour textures, so `src/wings.js` overrides
+both -- emissive is zeroed and a shader patch converts each sampled texel to
+luminance and multiplies it by bone, which means the model can never put a
+third colour on the page.
 
-The export is not index-welded, so shells are welded on vertex position before
-the split. Deterministic: same input, same output. Do not hand-edit
-`wing_frag.svg` — change the parameters at the top of `wing2.py` and re-run.
+`wing2.py` is still live, but now only builds the **fallback**. It reads the
+same GLB, projects the mesh to a front view and traces a flat silhouette:
+shells are welded on vertex position (the export is not index-welded), split
+into connected components, and each of the ~850 feathers becomes its own path
+across three tonal bands. That SVG sits behind the canvas and is revealed if
+WebGL is unavailable or the model fails to load.
+
+Deterministic: same input, same output. Do not hand-edit `wing_frag.svg` --
+change the parameters at the top of `wing2.py` and re-run.
 
 ## Placeholders — replace before launch
 
@@ -56,10 +71,12 @@ Two things in here are stand-ins, and both are flagged in the source:
   the modal on mount; `popstate` closes it.
 - Sold out is permanent. A new run gets a new slug, never a restock in place.
 - Buttons say what happens: `Add to bag` -> `Added`, sold out -> `Notify me`.
-- Three loops only: the wing breathe and the live-drop REC dot. Alarm red is
-  used for nothing else.
-- Responsive to 360px, visible `:focus-visible` throughout,
-  `prefers-reduced-motion` kills the loops and leaves everything visible.
+- Two loops only: the wing drift and the live-drop REC dot. Alarm red is used
+  for nothing else.
+- Responsive to 360px, visible `:focus-visible` throughout.
+  `prefers-reduced-motion` renders a single static frame of the wings instead
+  of animating, and leaves everything visible. Rendering also pauses while the
+  tab is hidden.
 
 ## Open work
 

@@ -180,6 +180,32 @@ def data_uri(svg):
         svg.encode("utf-8")).decode("ascii")
 
 
+GLB = "assets/angel_wings.glb"
+BUNDLE = "src/wings.bundle.js"
+
+
+def glb_base64():
+    """The wing model, inlined so the page stays one file."""
+    if not os.path.exists(GLB):
+        raise SystemExit("missing " + GLB)
+    with open(GLB, "rb") as fh:
+        return base64.b64encode(fh.read()).decode("ascii")
+
+
+def load_bundle():
+    """The three.js scene, bundled by:
+
+        npx esbuild src/wings.js --bundle --format=iife --minify \
+            --target=es2019 --outfile=src/wings.bundle.js
+    """
+    if not os.path.exists(BUNDLE):
+        raise SystemExit(
+            "missing {}: run the esbuild command in load_bundle()".format(
+                BUNDLE))
+    with open(BUNDLE) as fh:
+        return fh.read()
+
+
 def load_wing():
     if not os.path.exists(WING):
         raise SystemExit(
@@ -259,15 +285,14 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer }
   height:100dvh; min-height:540px; width:100%; overflow:hidden;
 }
 .bg{ position:absolute; inset:0; pointer-events:none }
-.wings{
-  position:absolute; left:50%; top:48%; width:min(1480px,152vw);
-  transform:translate(-50%,-50%); color:var(--bone); opacity:.16;
-  animation:breathe 9s ease-in-out infinite;
-}
-.wings svg{ display:block; width:100%; height:auto }
-@keyframes breathe{
-  0%,100%{ transform:translate(-50%,-50%) scale(1) }
-  50%    { transform:translate(-50%,-50%) scale(1.035) }
+.wings{ position:absolute; inset:0 }
+#wings{ opacity:0; transition:opacity 1.4s ease-out }
+#wings.ready{ opacity:.46 }
+#wings canvas{ display:block; width:100%; height:100% }
+#wings-flat{ color:var(--bone); opacity:.16 }
+#wings-flat svg{
+  position:absolute; left:50%; top:48%; width:min(1480px,152vw); height:auto;
+  transform:translate(-50%,-50%);
 }
 .scan{
   position:absolute; inset:0; opacity:.5;
@@ -276,8 +301,8 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer }
 }
 .vig{
   position:absolute; inset:0;
-  background:radial-gradient(ellipse at 50% 44%, transparent 28%,
-    var(--void) 88%);
+  background:radial-gradient(ellipse at 50% 44%, transparent 42%,
+    var(--void) 96%);
 }
 
 /* ---------- nav ---------- */
@@ -415,7 +440,6 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer }
     animation-duration:.001ms !important; animation-iteration-count:1 !important;
     transition-duration:.001ms !important;
   }
-  .wings{ animation:none }
   .menu-nav a,.menu-foot{ opacity:1; transform:none }
 }
 """
@@ -561,7 +585,8 @@ def build():
 
 <div class="stage">
   <div class="bg" aria-hidden="true">
-    <div class="wings">__WINGS__</div>
+    <div class="wings" id="wings"></div>
+    <div class="wings" id="wings-flat" hidden>__WINGS__</div>
     <div class="scan"></div>
     <div class="vig"></div>
   </div>
@@ -643,6 +668,8 @@ def build():
   </div>
 </div>
 
+<script>window.__WINGS_GLB__="__GLB__"</script>
+<script>__BUNDLE__</script>
 <script>__JS__</script>
 </body>
 </html>
@@ -652,6 +679,8 @@ def build():
             .replace("__FONTS__", FONTS)
             .replace("__CSS__", CSS)
             .replace("__WINGS__", load_wing())
+            .replace("__GLB__", glb_base64())
+            .replace("__BUNDLE__", load_bundle())
             .replace("__MARK__", MARK)
             .replace("__NAV__", nav)
             .replace("__MENU__", menu_links)
